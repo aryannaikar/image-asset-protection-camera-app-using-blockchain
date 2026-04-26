@@ -75,14 +75,14 @@ npx hardhat run scripts/deploy.js --network localhost
 ### Phase 2: Backend Server
 ```bash
 cd realityshield-backend
-npm run dev
+node server.js
 ```
 The server will run at `http://localhost:5000`.
 
 ### Phase 3: Mobile App
 ```bash
 cd mobile-app
-npm start
+npx expo start --tunnel -c
 ```
 Scan the QR code with the **Expo Go** app.
 
