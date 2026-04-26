@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    :root {
+      --primary: #818cf8;
+      --bg: #0f172a;
+      --card: rgba(30, 41, 59, 0.7);
+      --text: #f1f5f9;
+      --subtext: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+
+    body {
+      width: 320px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .logo-img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .status-authentic { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    .status-tampered { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+    .status-unknown { background: rgba(148, 163, 184, 0.2); color: var(--subtext); }
+
+    .result-title {
+      font-size: 14px;
+      color: var(--subtext);
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      color: var(--subtext);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .meta-val {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--subtext);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid rgba(129, 140, 248, 0.1);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-icon">🛡️</div>
+      <h1 class="title">RealityShield</h1>
+    </div>
+
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Verifying authenticity...</p>
+    </div>
+
+    <div id="content" style="display: none;">
+      <div class="card">
+        <div id="badge" class="status-badge">Authentic</div>
+        
+        <div class="result-title">Verdict</div>
+        <div id="verdict" class="result-value">Exact match found</div>
+
+        <div id="meta" class="meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Confidence</span>
+            <span id="confidence" class="meta-val">100%</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Owner</span>
+            <span id="owner" class="meta-val">Anonymous</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by Blockchain & pHash Technology
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
