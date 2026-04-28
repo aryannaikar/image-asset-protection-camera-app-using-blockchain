@@ -4,6 +4,7 @@ const path = require("path");
 const hashService = require("../services/hashService");
 const dbService = require("../services/dbService");
 const blockchainService = require("../services/blockchainService");
+const geminiService = require("../services/geminiService");
 const compare = require("../utils/compareHash");
 
 exports.verifyImage = async (req, res) => {
@@ -53,7 +54,12 @@ exports.verifyImage = async (req, res) => {
         status: "authentic",
         confidence: 100,
         reason: "exact match",
-        original: original || { sha256: sha }
+        original: original || { sha256: sha },
+        aiAnalysis: {
+          isAIGenerated: false,
+          isManipulated: false,
+          analysisSummary: "This image exactly matches a verified record on the blockchain."
+        }
       });
     }
 
@@ -66,6 +72,9 @@ exports.verifyImage = async (req, res) => {
       // 256 bit hash. Confidence is percentage of bits that match.
       const confidence = Math.round(((256 - distance) / 256) * 100);
 
+      // 3b. AI Forensic Analysis for tampered images
+      const aiAnalysis = await geminiService.analyzeImageAuthenticity(filePath);
+
       // Cleanup
       if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
@@ -76,16 +85,21 @@ exports.verifyImage = async (req, res) => {
         original: {
           ...match,
           imageUrl: `https://gateway.pinata.cloud/ipfs/${match.cid}`
-        }
+        },
+        aiAnalysis
       });
     }
 
-    // 4. No Match
+    // 4. No Match - Run AI analysis for deeper check
+    const aiAnalysis = await geminiService.analyzeImageAuthenticity(filePath);
+
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    
     return res.json({
       status: "unknown",
-      confidence: 0,
-      reason: "No matching records found in database or blockchain"
+      confidence: aiAnalysis ? aiAnalysis.confidenceScore : 0,
+      reason: aiAnalysis ? "No blockchain match, but AI analysis performed." : "No matching records found in database or blockchain",
+      aiAnalysis
     });
 
   } catch (error) {

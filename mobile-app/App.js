@@ -268,6 +268,24 @@ export default function App() {
 
                   <Text style={styles.reasonText}>{result.reason || 'Image analyzed against global registry.'}</Text>
 
+                  {result.aiAnalysis && (
+                    <View style={styles.aiReportSection}>
+                      <View style={styles.aiReportHeader}>
+                        <Ionicons name="sparkles" size={18} color="#818cf8" />
+                        <Text style={styles.aiReportTitle}>AI Forensic Report</Text>
+                      </View>
+                      <View style={styles.aiBadgeRow}>
+                        <View style={[styles.aiBadge, result.aiAnalysis.isAIGenerated ? styles.aiBadgeAlert : styles.aiBadgeSafe]}>
+                          <Text style={styles.aiBadgeText}>{result.aiAnalysis.isAIGenerated ? 'AI GEN DETECTED' : 'NOT AI GEN'}</Text>
+                        </View>
+                        <View style={[styles.aiBadge, result.aiAnalysis.isManipulated ? styles.aiBadgeAlert : styles.aiBadgeSafe]}>
+                          <Text style={styles.aiBadgeText}>{result.aiAnalysis.isManipulated ? 'MANIPULATED' : 'CLEAN'}</Text>
+                        </View>
+                      </View>
+                      <Text style={styles.aiSummaryText}>{result.aiAnalysis.analysisSummary}</Text>
+                    </View>
+                  )}
+
                   {result.status === 'unknown' && (
                     <View style={styles.protectSection}>
                       <View style={styles.infoLine}>
@@ -602,4 +620,51 @@ const styles = StyleSheet.create({
   authInput: { backgroundColor: 'rgba(2, 6, 23, 0.5)', padding: 18, borderRadius: 16, color: '#fff', fontSize: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.05)', marginBottom: 15 },
   authSubmit: { backgroundColor: '#818cf8', padding: 18, borderRadius: 16, alignItems: 'center', marginTop: 10 },
   authSubmitText: { color: '#fff', fontSize: 17, fontWeight: '800' },
+
+  aiReportSection: {
+    backgroundColor: 'rgba(129, 140, 248, 0.05)',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(129, 140, 248, 0.1)',
+    marginBottom: 20,
+  },
+  aiReportHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  aiReportTitle: {
+    color: '#818cf8',
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 0.5,
+  },
+  aiBadgeRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 12,
+  },
+  aiBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
+  },
+  aiBadgeSafe: {
+    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+  },
+  aiBadgeAlert: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+  },
+  aiBadgeText: {
+    fontSize: 10,
+    fontWeight: '900',
+    color: '#fff',
+  },
+  aiSummaryText: {
+    color: '#94a3b8',
+    fontSize: 12,
+    lineHeight: 18,
+  },
 });
