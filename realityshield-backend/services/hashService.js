@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const fs = require("fs");
-const { imageHash } = require("image-hash");
+const imghash = require("imghash");
 
 /**
  * Generates both SHA-256 and perceptual hash for an image.
@@ -13,13 +13,13 @@ exports.generateHashes = async (filePath) => {
   const sha = crypto.createHash("sha256").update(fileBuffer).digest("hex");
 
   // Generate pHash (Perceptual Similarity)
-  // 16 bits = 64-bit hash (16x4)
-  const phash = await new Promise((resolve, reject) => {
-    imageHash(filePath, 16, true, (err, data) => {
-      if (err) reject(err);
-      else resolve(data);
-    });
-  });
-
-  return { sha, phash };
+  // imghash returns a hex string by default
+  try {
+    const phash = await imghash.hash(filePath, 16);
+    return { sha, phash };
+  } catch (error) {
+    console.error("[HashService] Error generating pHash:", error);
+    // Return empty pHash or handle error as needed
+    return { sha, phash: "0".repeat(64) };
+  }
 };
